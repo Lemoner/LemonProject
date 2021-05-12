@@ -1,0 +1,1 @@
+[WARN][2021-05-07T16:19:53.755+0800][org.springframework.boot.StartupInfoLogger] [main] _am||traceid=||spanid=||msg=InetAddress.getLocalHost().getHostName() took 5002 milliseconds to respond. Please verify your network configuration (macOS machines may need to add entries to /etc/hosts).

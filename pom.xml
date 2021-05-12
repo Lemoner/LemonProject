@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.5.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.lemon.learn</groupId>
+    <artifactId>learn-project</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>learn-spring</module>
+        <module>learn-common</module>
+        <module>learn-java</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <encoding>UTF-8</encoding>
+
+        <skipDeploy>false</skipDeploy>
+        <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
+        <mysql.connector.java.version>5.1.41</mysql.connector.java.version>
+        <fasterxml.jackson.version>2.11.3</fasterxml.jackson.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- ============= -->
+            <!-- 自身的maven模块 -->
+            <!-- ============= -->
+            <dependency>
+                <groupId>com.lemon.learn</groupId>
+                <artifactId>learn-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lemon.learn</groupId>
+                <artifactId>learn-java</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lemon.learn</groupId>
+                <artifactId>learn-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- ============= -->
+            <!--    三方包      -->
+            <!-- ============= -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!-- mysql 配置，注意下面的mybatis相关的版本号修改的时候需要注意兼容性 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>1.3.0</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>1.3.2</version>
+            </dependency>
+            <!-- 引入 tk.mybatis:mapper-spring-boot-starter 之后
+             org.mybatis.spring.boot:mybatis-spring-boot-starter 无效
+              https://github.com/abel533/Mapper/wiki/1.3-spring-boot -->
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>2.1.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>3.4.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>1.3.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.0-jre</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>19.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>3.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>1.5.20</version>
+                <scope>compile</scope>
+            </dependency>
+
+
+            <!--单元测试-->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>3.16.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${fasterxml.jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-guava</artifactId>
+                <version>${fasterxml.jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <optional>true</optional>
+                <version>1.18.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <configuration>
+                    <deployAtEnd>true</deployAtEnd>
+                    <skip>${skipDeploy}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <executions>
+                    <!--
+                    使用 maven-enforcer-plugin 自动检查 maven dependency 是否合法
+                    https://maven.apache.org/enforcer/enforcer-rules/bannedDependencies.html
+                    -->
+                    <execution>
+                        <id>enforce-banned-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <!-- 日志使用 logback -->
+                                        <exclude>commons-logging:commons-logging</exclude>
+                                        <exclude>org.apache.logging.log4j:log4j-core</exclude>
+                                        <exclude>org.apache.logging.log4j:log4j-slf4j-impl</exclude>
+                                        <exclude>org.slf4j:slf4j-log4j12</exclude>
+                                        <exclude>log4j:log4j</exclude>
+
+                                        <!-- 因为安全原因，禁止使用 fastjson。引入fastjson 会导致安全部给这个应用提安全工单 -->
+                                        <exclude>com.alibaba:fastjson</exclude>
+
+                                        <!-- hibernate validator 的 maven 坐标从 org.hibernate:hibernate-validator 改成了
+                    org.hibernate.validator:hibernate-validator, 所以需要排除掉所有老的 maven 坐标 -->
+                                        <exclude>org.hibernate:hibernate-validator</exclude>
+
+                                        <!-- jakarta.validation:jakarta.validation-api 替代了
+                                        javax.validation:validation-api -->
+                                        <exclude>javax.validation:validation-api</exclude>
+
+                                        <!--
+                    javax.servlet:javax.servlet-api 的 maven 坐标改成了 jakarta.servlet:jakarta.servlet-api，原来的坐标需要排除
+                                         -->
+                                        <exclude>javax.servlet:javax.servlet-api</exclude>
+
+                                        <!-- 移除对 kepler 的依赖 -->
+                                        <exclude>com.kepler:*</exclude>
+
+                                        <!-- dubbo 2.7.3 maven 坐标变了-->
+                                        <exclude>com.alibaba:dubbo</exclude>
+                                        <exclude>com.alibaba.boot:dubbo-spring-boot-actuator</exclude>
+                                        <exclude>com.alibaba.boot:dubbo-spring-boot-autoconfigure</exclude>
+                                        <exclude>com.alibaba.boot:dubbo-spring-boot-starter</exclude>
+
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

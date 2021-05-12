@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="root.log.path" source="root.log.path"/>
+
+    <!-- 终端输出的时候，支持彩色。文件当然是没有彩色的。-->
+    <property name="CONSOLE_PATTERN"
+      value="%highlight([%p])[%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}]%magenta([%c]) [%thread] _am||traceid=%X{traceid}||spanid=%X{spanid}||msg=%msg%n"/>
+    <property name="FILE_PATTERN"
+      value="[%p][%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}][%c] [%thread] _am||traceid=%X{traceid}||spanid=%X{spanid}||msg=%msg%n"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>${CONSOLE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 为了使用 odin 的日志切割功能，滚动日志的时间必须在文件名的最后面，现在使用 %Y-%m-%d-%H -->
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${root.log.path}/ric_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${root.log.path}/ric_info.log.%d{yyyy-MM-dd}-%i</fileNamePattern>
+            <maxFileSize>512mb</maxFileSize>
+            <totalSizeCap>10gb</totalSizeCap>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <file>${root.log.path}/ric_warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${root.log.path}/ric_warn.log.%d{yyyy-MM-dd}-%i</fileNamePattern>
+            <maxFileSize>512mb</maxFileSize>
+            <totalSizeCap>5gb</totalSizeCap>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="TRACE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${root.log.path}/trace.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${root.log.path}/trace.log.%d{yyyy-MM-dd}-%i</fileNamePattern>
+            <maxFileSize>512mb</maxFileSize>
+            <totalSizeCap>10gb</totalSizeCap>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="dubboLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${root.log.path}/dubbo.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${root.log.path}/dubbo.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <totalSizeCap>1gb</totalSizeCap>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="INFO_FILE"/>
+        <appender-ref ref="WARN_FILE"/>
+    </root>
+
+    <!-- com.didi.middleware.dubbo.filter.SimpleDiDiLogDubboFilter 打印的RPC调用时长 LOG，没啥用，现在直接用
+summer-cloud-metric 可以获取包括请求和响应值在内的数据 -->
+    <logger name="trace_log" level="OFF" additivity="false"/>
+
+    <logger name="io.swagger.models.parameters.AbstractSerializableParameter" level="ERROR"/>
+    <logger name="com.xiaojukeji.carrera.common.disf.EndpointManagerSD" level="WARN"/>
+
+    <!-- dubbo 默认会打印很多垃圾日志，不要放到 warn.log 文件里面，以免污染业务日志。 -->
+    <logger name="com.didi.middleware.dubbo" additivity="false" level="INFO">
+        <appender-ref ref="dubboLogger"/>
+    </logger>
+    <logger name="org.apache.dubbo" additivity="false" level="INFO">
+        <appender-ref ref="dubboLogger"/>
+    </logger>
+
+    <!-- 自定义打印的切面日志 -->
+    <logger name="com.xiaoju.automarket.ric.commons.aspect.LogAspect" additivity="false" level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="TRACE_LOG"/>
+    </logger>
+
+    <!-- 移除 ctrip apollo 莫名其妙的 warn 日志 -->
+    <logger name="com.ctrip.framework.apollo.internals" level="ERROR"/>
+
+    <!-- mysql 请求追踪日志。这里只是管理下日志打印的地方，开启日志需要修改 jdbc 连接串: profileSQL=true
+    日志量非常大，就查问题的时候开启下，平时不要开启 -->
+    <logger name="MySQL" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="TRACE_LOG"/>
+    </logger>
+
+</configuration>
